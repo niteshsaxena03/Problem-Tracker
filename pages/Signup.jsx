@@ -104,7 +104,11 @@ export const Signup = () => {
     setError("");
 
     try {
-      await signUpUserWithEmailAndPassword(formData.email, formData.password);
+      await signUpUserWithEmailAndPassword(
+        formData.email,
+        formData.password,
+        formData.name
+      );
       navigate("/problems");
     } catch (err) {
       setError(err.message);

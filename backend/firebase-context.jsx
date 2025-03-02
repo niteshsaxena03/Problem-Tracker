@@ -13,6 +13,8 @@ import {
   where,
   collection,
   getDocs,
+  setDoc,
+  doc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -61,8 +63,32 @@ export const FirebaseProvider = (props) => {
     }
   };
 
-  const signUpUserWithEmailAndPassword = (email, password) => {
-    return createUserWithEmailAndPassword(firebaseAuth, email, password);
+  const createUserDocument = async (name, email) => {
+    try {
+      const userRef = doc(db, "users", email);
+      await setDoc(userRef, {
+        name: name,
+        email: email,
+        unsolvedQuestions: [],
+      });
+    } catch (error) {
+      console.error("Error creating user document:", error);
+      throw error;
+    }
+  };
+
+  const signUpUserWithEmailAndPassword = async (email, password, name) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      await createUserDocument(name, email);
+      return userCredential;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const loginUserWithEmailAndPassword = (email, password) => {
