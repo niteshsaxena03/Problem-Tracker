@@ -1,4 +1,17 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFirebase } from "../backend/firebase-context";
+
 export const Home = () => {
+  const { isLoggedIn } = useFirebase();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/problems");
+    }
+  }, [isLoggedIn, navigate]);
+
   const styles = {
     container: {
       minHeight: "100vh",
